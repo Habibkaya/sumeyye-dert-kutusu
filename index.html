@@ -2,18 +2,18 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8">
-  <title>SÜMÜKÜME DERT KUTUSU YAPTIM </title>
+  <title>Davşanımın Dert Kutusu 🖤</title>
   <style>
     body {
-      background-color: #fff0f5;
-      font-family: 'Comic Sans MS', cursive;
+      background-color: #1a1a1a;
+      font-family: 'Segoe UI', sans-serif;
+      color: #f2f2f2;
       text-align: center;
       padding: 30px;
-      color: #444;
     }
 
     h1 {
-      color: #d63384;
+      color: #ff69b4;
     }
 
     textarea {
@@ -21,14 +21,17 @@
       height: 150px;
       margin-top: 20px;
       padding: 10px;
-      border: 2px solid #ff99cc;
+      border: 2px solid #ff69b4;
       border-radius: 10px;
       resize: none;
       font-size: 16px;
+      background-color: #2a2a2a;
+      color: #fff;
     }
 
     button {
-      background-color: #ff99cc;
+      background-color: #ff69b4;
+      color: #1a1a1a;
       border: none;
       padding: 10px 20px;
       margin: 15px;
@@ -40,9 +43,23 @@
     .output {
       margin-top: 20px;
       padding: 15px;
-      background-color: #ffe6f0;
+      background-color: #333;
       border-radius: 10px;
       min-height: 100px;
+      text-align: left;
+    }
+
+    .dert-blok {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #777;
+    }
+
+    .cozum {
+      margin-top: 10px;
+      background-color: #222;
+      padding: 8px;
+      border-radius: 8px;
     }
 
     footer {
@@ -50,34 +67,54 @@
       font-size: 12px;
       color: #999;
     }
+
+    .cozum textarea {
+      width: 100%;
+      background-color: #1a1a1a;
+      color: #f2f2f2;
+      border: 1px solid #555;
+      border-radius: 6px;
+      margin-top: 5px;
+      padding: 5px;
+      resize: vertical;
+    }
   </style>
 </head>
 <body>
-  <h1> Davşanımın Dert Kutusu</h1>
-  <p>İçine atma bana at <3 </p>
+  <h1>Davşanımın Dert Kutusu 🖤</h1>
+  <p>İçine atma bana at... ben burdayım.</p>
 
-  <textarea id="dertInput" placeholder="Dökül davşanım ben burdayım..."></textarea>
-  <br>
-  <button onclick="dertiEkle()">İçine At </button>
-  <button onclick="indir()">Dertleri İndir </button>
+  <textarea id="dertInput" placeholder="Dökül davşanım..."></textarea><br>
+  <button onclick="dertiEkle()">İçine At</button>
+
+  <!-- Habib için gizli indir butonu -->
+  <div id="habibMode" style="display: none;">
+    <button onclick="indir()">Dertleri ve Çözümleri İndir</button>
+  </div>
 
   <div class="output" id="dertListesi">
-    <em>Dertlerin burada belirecek </em>
+    <em>Dertlerin burada belirecek</em>
   </div>
 
   <footer>
-    HABİB SÜMEYYEYİ ÇOK SEVİYOR SÜMEYYEDE ONU!!
+    HABİB SÜMEYYEYİ ÇOK SEVİYOR, SÜMEYYE DE ONU! 💜
   </footer>
 
   <script>
     const dertler = [];
+
+    const habibMod = window.location.search.includes("habib");
 
     function dertiEkle() {
       const input = document.getElementById("dertInput");
       const deger = input.value.trim();
       if (deger) {
         const zaman = new Date().toLocaleString("tr-TR");
-        const kayit = `[${zaman}] ${deger}`;
+        const kayit = {
+          zaman: zaman,
+          yazi: deger,
+          cozum: ""
+        };
         dertler.push(kayit);
         input.value = "";
         guncelleListe();
@@ -88,18 +125,50 @@
       const alan = document.getElementById("dertListesi");
       alan.innerHTML = "";
       dertler.forEach((d, i) => {
+        const blok = document.createElement("div");
+        blok.className = "dert-blok";
+
         const p = document.createElement("p");
-        p.textContent = `${i + 1}. ${d}`;
-        alan.appendChild(p);
+        p.innerHTML = `<strong>${i + 1}.</strong> [${d.zaman}] ${d.yazi}`;
+        blok.appendChild(p);
+
+        if (habibMod) {
+          const cozumDiv = document.createElement("div");
+          cozumDiv.className = "cozum";
+
+          const label = document.createElement("label");
+          label.textContent = "Habib’in Çözümü:";
+          cozumDiv.appendChild(label);
+
+          const textarea = document.createElement("textarea");
+          textarea.value = d.cozum || "";
+          textarea.placeholder = "Çözümünü buraya yaz...";
+          textarea.oninput = () => {
+            d.cozum = textarea.value;
+          };
+          cozumDiv.appendChild(textarea);
+          blok.appendChild(cozumDiv);
+        }
+
+        alan.appendChild(blok);
       });
     }
 
     function indir() {
-      const blob = new Blob([dertler.join("\n")], { type: "text/plain;charset=utf-8" });
+      let metin = "";
+      dertler.forEach((d, i) => {
+        metin += `${i + 1}. [${d.zaman}]\nDERT: ${d.yazi}\nÇÖZÜM: ${d.cozum || "-"}\n\n`;
+      });
+
+      const blob = new Blob([metin], { type: "text/plain;charset=utf-8" });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = "sumeyyenin_dertlari.txt";
+      link.download = "dert_ve_cozumler.txt";
       link.click();
+    }
+
+    if (habibMod) {
+      document.getElementById("habibMode").style.display = "block";
     }
   </script>
 </body>
