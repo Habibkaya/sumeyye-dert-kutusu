@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>SÜMÜKÜME DERT KUTUSU YAPTIM </title>
+  <style>
+    body {
+      background-color: #fff0f5;
+      font-family: 'Comic Sans MS', cursive;
+      text-align: center;
+      padding: 30px;
+      color: #444;
+    }
+
+    h1 {
+      color: #d63384;
+    }
+
+    textarea {
+      width: 80%;
+      height: 150px;
+      margin-top: 20px;
+      padding: 10px;
+      border: 2px solid #ff99cc;
+      border-radius: 10px;
+      resize: none;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #ff99cc;
+      border: none;
+      padding: 10px 20px;
+      margin: 15px;
+      font-size: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #ffe6f0;
+      border-radius: 10px;
+      min-height: 100px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 12px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <h1> Davşanımın Dert Kutusu</h1>
+  <p>İçine atma bana at <3 </p>
+
+  <textarea id="dertInput" placeholder="Dökül davşanım ben burdayım..."></textarea>
+  <br>
+  <button onclick="dertiEkle()">İçine At </button>
+  <button onclick="indir()">Dertleri İndir </button>
+
+  <div class="output" id="dertListesi">
+    <em>Dertlerin burada belirecek </em>
+  </div>
+
+  <footer>
+    HABİB SÜMEYYEYİ ÇOK SEVİYOR SÜMEYYEDE ONU!!
+  </footer>
+
+  <script>
+    const dertler = [];
+
+    function dertiEkle() {
+      const input = document.getElementById("dertInput");
+      const deger = input.value.trim();
+      if (deger) {
+        const zaman = new Date().toLocaleString("tr-TR");
+        const kayit = `[${zaman}] ${deger}`;
+        dertler.push(kayit);
+        input.value = "";
+        guncelleListe();
+      }
+    }
+
+    function guncelleListe() {
+      const alan = document.getElementById("dertListesi");
+      alan.innerHTML = "";
+      dertler.forEach((d, i) => {
+        const p = document.createElement("p");
+        p.textContent = `${i + 1}. ${d}`;
+        alan.appendChild(p);
+      });
+    }
+
+    function indir() {
+      const blob = new Blob([dertler.join("\n")], { type: "text/plain;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "sumeyyenin_dertlari.txt";
+      link.click();
+    }
+  </script>
+</body>
+</html>
